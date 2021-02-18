@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { MySubscription } from './app.my.subscription.model';
 import { SubscriptionDto } from './dto/app.subscription-dto';
 

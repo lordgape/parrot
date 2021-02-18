@@ -9,7 +9,7 @@ describe('AppController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AppController],
-      providers: [Logger,AppService],
+      providers: [Logger, AppService],
     }).compile();
 
     appController = app.get<AppController>(AppController);
@@ -17,8 +17,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should have a good health check"', async () => {
-      
-      expect(await appController.getHealth()).toBe("Parrot - Your Http Notification Service is Green");
+      expect(await appController.getHealth()).toBe('Parrot - Your Http Notification Service is Green');
     });
   });
 });

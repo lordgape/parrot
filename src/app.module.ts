@@ -1,10 +1,12 @@
-import { Logger, Module } from '@nestjs/common';
+import { HttpModule, Logger, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ApiClient } from './app.api-client';
+import { RemoteService } from './remote/remote.service';
 
 @Module({
-  imports: [],
+  imports: [HttpModule],
   controllers: [AppController],
-  providers: [Logger,AppService],
+  providers: [ApiClient,Logger,AppService, RemoteService],
 })
 export class AppModule {}

@@ -2,10 +2,11 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MySubscription } from './app.my.subscription.model';
 import { AppService } from './app.service';
 import { SubscriptionDto } from './dto/app.subscription-dto';
+import { RemoteService } from './remote/remote.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService, private remoteService: RemoteService) {}
 
   @Get()
   async getHealth(): Promise<string> {
