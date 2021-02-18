@@ -12,7 +12,7 @@ export class AppService {
   }
 
   async getHealth(): Promise<string> {
-    return 'Publisher server is well and alive';
+    return 'Parrot - Your Http Notification Service is Green';
   }
 
   async subscribe(subscriptionDto: SubscriptionDto, topic: string): Promise<MySubscription> {
@@ -28,27 +28,25 @@ export class AppService {
 
     return mySub;
   }
-  
+
   async getSubscriberByTopic(topic: string): Promise<Array<MySubscription>> {
-    
-    if(this.subscriptionList[topic])
-    {
-       return this.subscriptionList[topic]
+    if (this.subscriptionList[topic]) {
+      return this.subscriptionList[topic];
     }
-    
+
     return [];
   }
 
-  async publishTopic(topic:string) : Promise<object> {
-    const subscriber = this.getSubscriberByTopic(topic);
+  async publishTopic(topic: string): Promise<object> {
+    const allSubscribers = (await this.getSubscriberByTopic(topic)).map((url) => {});
 
-    return {}
+    return {};
   }
 
   private async addToSubscriptionList(subscription: MySubscription) {
     const { url, topic } = subscription;
     if (this.subscriptionList[topic]) {
-      this.subscriptionList[topic].includes(url) ? null : this.subscriptionList[topic].push(url) ; // Ensure subscriber is only added once
+      this.subscriptionList[topic].includes(url) ? null : this.subscriptionList[topic].push(url); // Ensure subscriber is only added once
     } else {
       this.subscriptionList[topic] = [url];
     }
