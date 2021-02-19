@@ -2,14 +2,14 @@ import { HttpService, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class ApiClientService {
-    constructor(private httpService: HttpService, private logger: Logger) {}
+    constructor(private httpService: HttpService) {}
 
   async get(url: string, headers?: object): Promise<any> {
     headers = headers ? headers : { 'Content-Type': 'application/json' };
     try {
       const response = await this.httpService.get(url, { headers }).toPromise();
 
-      this.logger.log(
+      Logger.log(
         `GET URL: ${url} - 
         httpstatus: ${response.status}(${response.statusText.toUpperCase()}) - 
         RESPONSE: ${JSON.stringify(response.data)}`,
@@ -18,7 +18,7 @@ export class ApiClientService {
 
       return response;
     } catch (error) {
-      this.logger.log(
+      Logger.log(
         `GET URL: ${url} - ERROR: ${error.code} ${error.message} ${JSON.stringify(error.response)}`,
         'ApiClient-get',
       );
@@ -35,7 +35,7 @@ export class ApiClientService {
         })
         .toPromise();
 
-      this.logger.log(
+      Logger.log(
         `POST URL: ${url} - 
         httpstatus: ${response.status}(${response.statusText.toUpperCase()}) - 
         RESPONSE: ${JSON.stringify(response.data)}`,
@@ -43,7 +43,7 @@ export class ApiClientService {
       );
       return response;
     } catch (error) {
-      this.logger.log(
+      Logger.log(
         `POST URL: ${url} - 
         ERROR: ${error.code} ${error.message} ${JSON.stringify(error.response)}`,
         'ApiClient-post',

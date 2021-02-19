@@ -7,6 +7,6 @@ import { ApiClientService } from './app.api-client.service';
 @Module({
   imports: [HttpModule],
   controllers: [AppController],
-  providers: [ApiClientService, Logger, RemoteService, AppService],
+  providers: [ApiClientService, RemoteService, AppService],
 })
 export class AppModule {}

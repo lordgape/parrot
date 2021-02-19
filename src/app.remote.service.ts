@@ -4,7 +4,7 @@ import { NotificationDto } from './dto/app.notification-dto';
 
 @Injectable()
 export class RemoteService {
-  constructor(private logger: Logger, private apiClient: ApiClientService) {}
+  constructor(private apiClient: ApiClientService) {}
   async getPosts() {
     
     let response = await this.apiClient.post('https://jsonplaceholder.typicode.com/posts', {
@@ -13,7 +13,7 @@ export class RemoteService {
       userId: 1,
     });
 
-    this.logger.log(`${JSON.stringify(response.data)}`, 'RemoteService-getPosts');
+    Logger.log(`${JSON.stringify(response.data)}`, 'RemoteService-getPosts');
   }
   
   async send(notification: NotificationDto) : Promise<void>{
@@ -22,6 +22,6 @@ export class RemoteService {
     
     let response = await this.apiClient.post(url, payload);
 
-    this.logger.log(`${JSON.stringify(response.data)}`, 'RemoteService-getPosts');
+    Logger.log(`${JSON.stringify(response.data)}`, 'RemoteService-getPosts');
   }
 }

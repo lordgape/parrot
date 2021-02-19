@@ -2,14 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { MySubscription } from './app.my.subscription.model';
 import { RemoteService } from './app.remote.service';
 import { NotificationDto } from './dto/app.notification-dto';
-import { SubscriptionDto } from './dto/app.subscription-dto';
 
 @Injectable()
 export class AppService {
   // In a real life project we will use a DB
   private subscriptionList: object;
 
-  constructor(private readonly logger: Logger, private readonly remoteService: RemoteService) {
+  constructor(private readonly remoteService: RemoteService) {
     this.subscriptionList = {};
   }
 
@@ -18,15 +17,9 @@ export class AppService {
   }
 
   async subscribe(data: MySubscription): Promise<MySubscription> {
-    // let { url, topic } = data;
-    // const mySub: MySubscription = {
-    //   url,
-    //   topic,
-    // };
-
     await this.addToSubscriptionList(data);
 
-    this.logger.log(`New consumer ${data.url} subscribe to ${data.topic}`, 'AppService-subscribe');
+    Logger.log(`New consumer ${data.url} subscribe to topic [ ${data.topic} ]`, 'AppService-subscribe');
 
     return data;
   }
@@ -42,8 +35,8 @@ export class AppService {
   async publishTopic(topic: string, payload: object): Promise<object> {
     const allSubscribers = await this.getSubscriberByTopic(topic);
 
-    let reachable:Array<string> = [];
-    let unReachable:Array<string> = [];
+    let reachable: Array<string> = [];
+    let unReachable: Array<string> = [];
 
     const promisifiedSubscribers = allSubscribers.map((url) => {
       let notification: NotificationDto = {
@@ -53,23 +46,23 @@ export class AppService {
       return this.remoteService
         .send(notification)
         .then((response) => {
-          this.logger.log(`${url} - has be Notified`);
-          reachable.push(url)
+          Logger.log(`${url} - has be Notified`,'AppService-publishTopic');
+          reachable.push(url);
         })
         .catch((err) => {
-          this.logger.log(`We try reaching Subcriber ${url} but no luck`);
-          unReachable.push(url)
+          Logger.log(`We try reaching Subcriber ${url} but no luck`,'AppService-publishTopic');
+          unReachable.push(url);
         });
     });
 
     await Promise.all(promisifiedSubscribers);
 
-    return { 
+    return {
       msg: `We just published ${topic} `,
-      subscribers:allSubscribers,
+      subscribers: allSubscribers,
       reachable,
-      unreachable:unReachable
-   };
+      unreachable: unReachable,
+    };
   }
 
   private async addToSubscriptionList(subscription: MySubscription) {
