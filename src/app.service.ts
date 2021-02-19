@@ -17,18 +17,18 @@ export class AppService {
     return 'Parrot - Your Http Notification Service is Green';
   }
 
-  async subscribe(subscriptionDto: SubscriptionDto, topic: string): Promise<MySubscription> {
-    let { url } = subscriptionDto;
-    const mySub: MySubscription = {
-      url,
-      topic,
-    };
+  async subscribe(data: MySubscription): Promise<MySubscription> {
+    // let { url, topic } = data;
+    // const mySub: MySubscription = {
+    //   url,
+    //   topic,
+    // };
 
-    await this.addToSubscriptionList(mySub);
+    await this.addToSubscriptionList(data);
 
-    this.logger.log(`New consumer ${url} subscribe to ${topic}`, 'AppService-subscribe');
+    this.logger.log(`New consumer ${data.url} subscribe to ${data.topic}`, 'AppService-subscribe');
 
-    return mySub;
+    return data;
   }
 
   async getSubscriberByTopic(topic: string): Promise<Array<string>> {
