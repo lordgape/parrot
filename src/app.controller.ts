@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { SubscriptionDto } from './dto/app.subscription-dto';
 import { RemoteService } from './app.remote.service';
 import { MessagePattern } from '@nestjs/microservices';
+import { NotificationDto } from './dto/app.notification-dto';
+import { PublishDto } from './dto/app.publish.dto';
 
 @Controller()
 export class AppController {
@@ -14,19 +16,21 @@ export class AppController {
     return this.appService.getHealth();
   }
 
-  // @Post('/subscribe/:topic')
+  
   @MessagePattern('subscribe')
-  async subscribe(data: MySubscription): Promise<MySubscription> {
-    return this.appService.subscribe(data);
+  async subscribe(sub: MySubscription): Promise<MySubscription> {
+    return this.appService.subscribe(sub);
   }
 
-  @Get('/subscribe/:topic')
-  async getSubscribersByTopic(@Param('topic') topic: string): Promise<Array<string>> {
+
+  @MessagePattern('subscriptions')
+  async getSubscribersByTopic(topic: string): Promise<Array<string>> {
     return this.appService.getSubscriberByTopic(topic);
   }
 
-  @Post('/publish/:topic')
-  async publishTopic(@Param('topic') topic: string, @Body() payload: object): Promise<object> {
+  @MessagePattern('publish')
+  async publishTopic(data: PublishDto): Promise<object> {
+    const {topic, payload} = data
     return this.appService.publishTopic(topic, payload);
   }
 }
