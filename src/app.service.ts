@@ -42,21 +42,34 @@ export class AppService {
   async publishTopic(topic: string, payload: object): Promise<object> {
     const allSubscribers = await this.getSubscriberByTopic(topic);
 
+    let reachable:Array<string> = [];
+    let unReachable:Array<string> = [];
+
     const promisifiedSubscribers = allSubscribers.map((url) => {
       let notification: NotificationDto = {
         url,
         payload,
       };
-      return this.remoteService.send(notification).then((response) => {
-        this.logger.log(`${url} - has be Notified`);
-      }).catch((err) => {
-        this.logger.log(`We try reaching Subcriber ${url} but no luck`);
-      });
+      return this.remoteService
+        .send(notification)
+        .then((response) => {
+          this.logger.log(`${url} - has be Notified`);
+          reachable.push(url)
+        })
+        .catch((err) => {
+          this.logger.log(`We try reaching Subcriber ${url} but no luck`);
+          unReachable.push(url)
+        });
     });
 
-    await Promise.all(allSubscribers);
+    await Promise.all(promisifiedSubscribers);
 
-    return { Success: 'Notified subscribers' };
+    return { 
+      msg: `We just published ${topic} `,
+      subscribers:allSubscribers,
+      reachable,
+      unreachable:unReachable
+   };
   }
 
   private async addToSubscriptionList(subscription: MySubscription) {
