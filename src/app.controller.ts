@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MySubscription } from './app.my.subscription.model';
 import { AppService } from './app.service';
 import { SubscriptionDto } from './dto/app.subscription-dto';
-import { RemoteService } from './remote/remote.service';
+import { RemoteService } from './app.remote.service';
 
 @Controller()
 export class AppController {
@@ -19,12 +19,12 @@ export class AppController {
   }
 
   @Get('/subscribe/:topic')
-  async getSubscribersByTopic(@Param('topic') topic: string): Promise<Array<MySubscription>> {
+  async getSubscribersByTopic(@Param('topic') topic: string): Promise<Array<string>> {
     return this.appService.getSubscriberByTopic(topic);
   }
 
   @Post('/publish/:topic')
-  async publishTopic(@Param('topic') topic: string): Promise<object> {
-    return this.appService.publishTopic(topic);
+  async publishTopic(@Param('topic') topic: string, @Body() payload: object): Promise<object> {
+    return this.appService.publishTopic(topic,payload);
   }
 }

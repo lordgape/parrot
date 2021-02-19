@@ -1,6 +1,8 @@
-import { Logger } from '@nestjs/common';
+import { HttpModule, Logger } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ApiClientService } from './app.api-client.service';
 import { AppController } from './app.controller';
+import { RemoteService } from './app.remote.service';
 import { AppService } from './app.service';
 
 describe('AppController', () => {
@@ -8,8 +10,9 @@ describe('AppController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
+      imports: [HttpModule],
       controllers: [AppController],
-      providers: [Logger, AppService],
+      providers: [ApiClientService, Logger, RemoteService, AppService],
     }).compile();
 
     appController = app.get<AppController>(AppController);

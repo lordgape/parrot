@@ -1,5 +1,7 @@
-import { HttpService, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MySubscription } from './app.my.subscription.model';
+import { RemoteService } from './app.remote.service';
+import { NotificationDto } from './dto/app.notification-dto';
 import { SubscriptionDto } from './dto/app.subscription-dto';
 
 @Injectable()
@@ -7,7 +9,7 @@ export class AppService {
   // In a real life project we will use a DB
   private subscriptionList: object;
 
-  constructor(private readonly logger: Logger) {
+  constructor(private readonly logger: Logger, private readonly remoteService: RemoteService) {
     this.subscriptionList = {};
   }
 
@@ -29,7 +31,7 @@ export class AppService {
     return mySub;
   }
 
-  async getSubscriberByTopic(topic: string): Promise<Array<MySubscription>> {
+  async getSubscriberByTopic(topic: string): Promise<Array<string>> {
     if (this.subscriptionList[topic]) {
       return this.subscriptionList[topic];
     }
@@ -37,10 +39,24 @@ export class AppService {
     return [];
   }
 
-  async publishTopic(topic: string): Promise<object> {
-    const allSubscribers = (await this.getSubscriberByTopic(topic)).map((url) => {});
+  async publishTopic(topic: string, payload: object): Promise<object> {
+    const allSubscribers = await this.getSubscriberByTopic(topic);
 
-    return {};
+    const promisifiedSubscribers = allSubscribers.map((url) => {
+      let notification: NotificationDto = {
+        url,
+        payload,
+      };
+      return this.remoteService.send(notification).then((response) => {
+        this.logger.log(`${url} - has be Notified`);
+      }).catch((err) => {
+        this.logger.log(`We try reaching Subcriber ${url} but no luck`);
+      });
+    });
+
+    await Promise.all(allSubscribers);
+
+    return { Success: 'Notified subscribers' };
   }
 
   private async addToSubscriptionList(subscription: MySubscription) {

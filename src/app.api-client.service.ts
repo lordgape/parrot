@@ -1,8 +1,8 @@
 import { HttpService, Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
-export class ApiClient {
-  constructor(private httpService: HttpService, private logger: Logger) {}
+export class ApiClientService {
+    constructor(private httpService: HttpService, private logger: Logger) {}
 
   async get(url: string, headers?: object): Promise<any> {
     headers = headers ? headers : { 'Content-Type': 'application/json' };
