@@ -3,14 +3,10 @@ import { NestFactory } from '@nestjs/core';
 import { Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 
-
-
-
 const microserviceOptions = {
-  transport: Transport.TCP,
+  transport: Transport.REDIS,
   options: {
-    host: '172.25.0.25',
-    port: 8877,
+    url:"redis://172.25.0.23:6379"
   },
 };
 
