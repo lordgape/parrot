@@ -38,6 +38,7 @@ export class ApiClientService {
       Logger.log(
         `POST URL: ${url} - 
         httpstatus: ${response.status}(${response.statusText.toUpperCase()}) - 
+        PAYLOAD: ${JSON.stringify(body)}
         RESPONSE: ${JSON.stringify(response.data)}`,
         'ApiClient-post',
       );
